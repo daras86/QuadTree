@@ -56,6 +56,7 @@ class QuadTree {
 
         if (this.points.length < this.capacity) {
             this.points.push(point);
+			return true;
         } else {
             if (!this.divided) {
                 this.subdivide();
@@ -80,7 +81,7 @@ class QuadTree {
         stroke(255);
         noFill();
         rectMode(CENTER);
-        rect(this.boundry.x, this.boundry.y, this.boundry.w * 2, this.boundry.y * 2);
+        rect(this.boundry.x, this.boundry.y, this.boundry.w * 2, this.boundry.h * 2);
         if (this.divided) {
             this.northeast.show();
             this.northwest.show();
