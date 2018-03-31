@@ -54,7 +54,14 @@ class QuadTree {
             return false;
         }
 
+        if(this.points.find(p => p['x'] === point.x && p['y'] === point.y)){
+            //console.log("Punkt już instanieje", point);
+            return false;
+        }
+        
         if (this.points.length < this.capacity) {
+            
+            console.log("Dodalem punkt ", point);
             this.points.push(point);
 			return true;
         } else {
@@ -89,7 +96,7 @@ class QuadTree {
             this.southwest.show();
         }
         for (let p of this.points) {
-            strokeWeight(4);
+            strokeWeight(2);
             point(p.x, p.y);
         }
     }
