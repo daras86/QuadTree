@@ -21,6 +21,13 @@ class Rectangle {
             return true;
         }
     }
+
+    intersects(range) {
+        return !(range.x - range.w > this.x + this.w ||
+            range.x + range.w < this.x - this.w ||
+            range.y - range.h > this.y + this.h ||
+            range.y + range.h < this.y - this.h);
+    }
 }
 
 class QuadTree {
@@ -54,16 +61,15 @@ class QuadTree {
             return false;
         }
 
-        if(this.points.find(p => p['x'] === point.x && p['y'] === point.y)){
-            //console.log("Punkt już instanieje", point);
+        if (this.points.find(p => p['x'] === point.x && p['y'] === point.y)) {
             return false;
         }
-        
+
         if (this.points.length < this.capacity) {
-            
-            console.log("Dodalem punkt ", point);
+
+            console.log("A new point has been added: ", point);
             this.points.push(point);
-			return true;
+            return true;
         } else {
             if (!this.divided) {
                 this.subdivide();
@@ -84,6 +90,31 @@ class QuadTree {
         }
     }
 
+    query(range, found) {
+        if(!found){
+            found = [];
+        }
+
+        if (!this.boundry.intersects(range)) {
+            return found;
+        } else {
+            for (let p of this.points){
+                if(range.contains(p)){
+                    found.push(p);
+                }
+            }
+        }
+
+        if(this.divided){
+            this.northwest.query(range, found);
+            this.northeast.query(range, found);
+            this.southeast.query(range, found);
+            this.southwest.query(range, found);
+        }
+
+        return found;
+    }
+
     show() {
         stroke(255);
         noFill();
@@ -93,10 +124,11 @@ class QuadTree {
             this.northeast.show();
             this.northwest.show();
             this.southwest.show();
-            this.southwest.show();
+            this.southeast.show();
         }
         for (let p of this.points) {
-            strokeWeight(2);
+            stroke(255, 0, 0);
+            strokeWeight(3);
             point(p.x, p.y);
         }
     }
