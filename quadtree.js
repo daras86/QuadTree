@@ -5,6 +5,14 @@ class Point {
     }
 }
 
+class NearestPoint {
+    constructor(point, distance, steps) {
+        this.distance = distance;
+        this.point = point;
+        this.stepsToFind = steps;
+    }
+}
+
 class Rectangle {
     constructor(x, y, w, h) {
         this.x = x;
@@ -56,6 +64,69 @@ class QuadTree {
         this.divided = true;
     }
 
+    getAllThePoints(points) {
+        if (!points) {
+            points = [];
+        }
+
+        for (let p of this.points) {
+            points.push(p);
+        }
+
+        if (this.divided) {
+            this.northeast.getAllThePoints(points);
+            this.northwest.getAllThePoints(points);
+            this.southeast.getAllThePoints(points);
+            this.southwest.getAllThePoints(points);
+        }
+
+        return points;
+    }
+
+    nearest(point, nearestPoints, checks) {
+        if (!nearestPoints) {
+            nearestPoints = [];
+            checks = 0;
+        }
+
+        if (!this.boundry.contains(point)) {
+            return nearestPoints;
+        }
+
+        let minDistance = Number.MAX_VALUE;
+        if (nearestPoints.length > 0) {
+            minDistance = nearestPoints[0].distance;
+        }
+
+        checks = checks + 1;
+
+        for (let p of this.points) {
+            let d = this.distance(point, p);
+
+
+            if (d < minDistance) {
+                minDistance = d;
+                nearestPoints.length = 0;
+                nearestPoints.push(new NearestPoint(p, minDistance, checks));
+            } else if (d == minDistance) {
+                nearestPoints.push(new NearestPoint(p, minDistance, checks));
+            }
+        }
+
+        if (this.divided) {
+            this.northeast.nearest(point, nearestPoints, checks);
+            this.northwest.nearest(point, nearestPoints, checks);
+            this.southeast.nearest(point, nearestPoints, checks);
+            this.southwest.nearest(point, nearestPoints, checks);
+        }
+
+        return nearestPoints;
+    }
+
+    distance(point1, point2) {
+        return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
+    }
+
     insert(point) {
         if (!this.boundry.contains(point)) {
             return false;
@@ -91,21 +162,21 @@ class QuadTree {
     }
 
     query(range, found) {
-        if(!found){
+        if (!found) {
             found = [];
         }
 
         if (!this.boundry.intersects(range)) {
             return found;
         } else {
-            for (let p of this.points){
-                if(range.contains(p)){
+            for (let p of this.points) {
+                if (range.contains(p)) {
                     found.push(p);
                 }
             }
         }
 
-        if(this.divided){
+        if (this.divided) {
             this.northwest.query(range, found);
             this.northeast.query(range, found);
             this.southeast.query(range, found);
@@ -115,16 +186,18 @@ class QuadTree {
         return found;
     }
 
-    show() {
-        stroke(255);
-        noFill();
-        rectMode(CENTER);
-        rect(this.boundry.x, this.boundry.y, this.boundry.w * 2, this.boundry.h * 2);
+    show(showGrid) {
+        if (showGrid) {
+            stroke(255);
+            noFill();
+            rectMode(CENTER);
+            rect(this.boundry.x, this.boundry.y, this.boundry.w * 2, this.boundry.h * 2);
+        }
         if (this.divided) {
-            this.northeast.show();
-            this.northwest.show();
-            this.southwest.show();
-            this.southeast.show();
+            this.northeast.show(showGrid);
+            this.northwest.show(showGrid);
+            this.southwest.show(showGrid);
+            this.southeast.show(showGrid);
         }
         for (let p of this.points) {
             stroke(255, 0, 0);
