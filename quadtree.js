@@ -89,13 +89,15 @@ class QuadTree {
             checks = 0;
         }
 
-        if (!this.boundry.contains(point)) {
-            return nearestPoints;
-        }
-
         let minDistance = Number.MAX_VALUE;
+        let range = this.boundry;
         if (nearestPoints.length > 0) {
             minDistance = nearestPoints[0].distance;
+            range = new Rectangle(point.x, point.y, minDistance, minDistance);
+        }
+
+        if (!this.boundry.intersects(range)) {
+            return nearestPoints;
         }
 
         checks = checks + 1;
