@@ -35,14 +35,16 @@ function draw() {
     // }    
 
     //if (keyIsDown(UP_ARROW)) {
-        let points = qtree.nearest(new Point(mouseX, mouseY));
-        console.log("Total nearest points: ", points.length);
+        let sourcePoint = new Point(mouseX, mouseY);
+        console.log("Source point: ", sourcePoint);
+        let points = qtree.nearest(sourcePoint);
+        console.log("Nearest points: ");
         for (let p of points) {
-            console.log("Nearest point is: ", p);
-            console.log("Sub trees visited: ", p.stepsToFind);
+            console.log(p);
             stroke(255, 255, 0);
             strokeWeight(6);
             point(p.point.x, p.point.y);
         }
+
     //}
 }
