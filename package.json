@@ -1,0 +1,27 @@
+{
+  "name": "quadtreejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sketch.js",
+  "dependencies": {
+    "p5": "^0.6.0",
+    "npm": "^5.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daras86/QuadTree.git"
+  },
+  "keywords": [
+    "js"
+  ],
+  "author": "Daras86",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/daras86/QuadTree/issues"
+  },
+  "homepage": "https://github.com/daras86/QuadTree#readme"
+}
