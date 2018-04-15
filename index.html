@@ -1,14 +1,38 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width">
 
-        <title>Quad Tree</title>
-        <script src="node_modules/p5/lib/p5.min.js"></script>
-        <script src="quadtree.js"></script>
-        <script src="sketch.js"></script>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width">
+
+    <title>Quad Tree</title>
+    <script src="node_modules/p5/lib/p5.min.js"></script>
+    <script src="quadtree.js"></script>
+    <script src="particle.js"></script>
+    <script src="sketch-collision-detection.js"></script>
+    <script src="sketch-nearest-point.js"></script>
+
+    <script>
+        var currentSketch;
+        function clicked(sketch) {
+            if (typeof currentSketch !== 'undefined') {
+                currentSketch.remove();
+            }
+
+            currentSketch = new p5(sketch);
+        }       
+    </script>
+</head>
+
+<body>
+    <button onclick="clicked(collisonsSketch)">Collisions</button>
+    <button onclick="clicked(nearestPointSketch)">Nearest Point</button>
+    <div id="framerate">
+
+    </div>
+
+</body>
+
 </html>

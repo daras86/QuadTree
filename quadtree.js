@@ -1,7 +1,8 @@
 class Point {
-    constructor(x, y) {
+    constructor(x, y, userData) {
         this.x = x;
         this.y = y;
+        this.userData = userData;
     }
 }
 
@@ -10,6 +11,23 @@ class NearestPoint {
         this.distance = distance;
         this.point = point;
         this.stepsToFind = steps;
+    }
+}
+
+class Circle {
+    constructor(x, y, r) {
+        this.x = x;
+        this.y = y;
+        this.r = r;
+    }
+
+    contains(p) {
+        return (Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2) <= this.r * this.r);
+    }
+
+    intersects(range) {
+        let d = dist(this.x, this.y, range.x, range.y);
+        return (d < this.r + range.r);
     }
 }
 
@@ -31,10 +49,19 @@ class Rectangle {
     }
 
     intersects(range) {
-        return !(range.x - range.w > this.x + this.w ||
-            range.x + range.w < this.x - this.w ||
-            range.y - range.h > this.y + this.h ||
-            range.y + range.h < this.y - this.h);
+        if (range instanceof Circle) {
+            let deltaX = Math.max(this.x - this.w, Math.min(this.x + this.w, range.x));
+            let deltaY = Math.max(this.y - this.h, Math.min(this.y + this.h, range.y));
+            return range.contains(new Point(deltaX, deltaY));
+        }
+        else if (range instanceof Rectangle) {
+            return !(range.x - range.w > this.x + this.w ||
+                range.x + range.w < this.x - this.w ||
+                range.y - range.h > this.y + this.h ||
+                range.y + range.h < this.y - this.h);
+        }
+
+        return false;
     }
 }
 
@@ -140,7 +167,7 @@ class QuadTree {
 
         if (this.points.length < this.capacity) {
 
-            console.log("A new point has been added: ", point);
+            //console.log("A new point has been added: ", point);
             this.points.push(point);
             return true;
         } else {
@@ -188,24 +215,24 @@ class QuadTree {
         return found;
     }
 
-    show(showGrid) {
+    show(p5, showGrid) {
         if (showGrid) {
-            stroke(255);
-            noFill();
-            rectMode(CENTER);
-            strokeWeight(0.5);
-            rect(this.boundry.x, this.boundry.y, this.boundry.w * 2, this.boundry.h * 2);
+            p5.stroke(255);
+            p5.noFill();
+            p5.rectMode(p.CENTER);
+            p5.strokeWeight(0.5);
+            p5.rect(this.boundry.x, this.boundry.y, this.boundry.w * 2, this.boundry.h * 2);
         }
         if (this.divided) {
-            this.northeast.show(showGrid);
-            this.northwest.show(showGrid);
-            this.southwest.show(showGrid);
-            this.southeast.show(showGrid);
+            this.northeast.show(p5, showGrid);
+            this.northwest.show(p5, showGrid);
+            this.southwest.show(p5, showGrid);
+            this.southeast.show(p5, showGrid);
         }
         for (let p of this.points) {
-            stroke(255, 0, 0);
-            strokeWeight(3);
-            point(p.x, p.y);
+            p5.stroke(255, 0, 0);
+            p5.strokeWeight(3);
+            p5.point(p.x, p.y);
         }
     }
 }
