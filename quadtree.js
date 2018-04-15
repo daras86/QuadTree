@@ -219,7 +219,7 @@ class QuadTree {
         if (showGrid) {
             p5.stroke(255);
             p5.noFill();
-            p5.rectMode(p.CENTER);
+            p5.rectMode(p5.CENTER);
             p5.strokeWeight(0.5);
             p5.rect(this.boundry.x, this.boundry.y, this.boundry.w * 2, this.boundry.h * 2);
         }
